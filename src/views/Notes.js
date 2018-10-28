@@ -2,24 +2,26 @@ import React, { Component } from 'react'
 import { Text, StyleSheet, View, FlatList, TextInput, Button } from 'react-native'
 
 //Declaración de componente InputSection
-const InputSection = ({ children }) => <View style={Styles.inputSection}>
+const InputSection = ({ children, currentNote, editCurrentNote, addNote }) => <View style={Styles.inputSection}>
   <TextInput
     style={Styles.textInput}
     multiline
+    onChangeText={(data) => editCurrentNote(data)}
+    value={currentNote}
   />
   <View style={Styles.publishOption}>
     <Button
       title='Agregar'
-      onPress={() => { }}
+      onPress={addNote}
     />
   </View>
   {children}
 </View>
 
 //Declaración de componente ListSection
-const ListSection = () => <View style={Styles.listSection}>
+const ListSection = ({ data }) => <View style={Styles.listSection}>
   <FlatList
-    data={[{ key: 'a' }, { key: 'b' }, { key: 'a' }, { key: 'b' }]}
+    data={data}
     renderItem={({ item }) => <Note textNote={item.key} />}
   />
 </View>
@@ -30,14 +32,28 @@ const Note = ({ textNote }) => <View style={Styles.note}>
 </View>
 
 export default class Notes extends Component {
-
-
+  constructor(props) {
+    super(props)
+    this.state = {
+      currentNote: '',
+      notes: []
+    }
+  }
 
   render() {
     return (
       <View style={Styles.mainContainer}>
-        <InputSection />
-        <ListSection />
+        <InputSection
+          currentNote={this.state.currentNote}
+          editCurrentNote={(data) => {
+            this.setState({ currentNote: data })
+          }}
+          addNote={() => {
+            this.setState({ notes: this.state.notes.concat({ key: this.state.currentNote }) })
+            this.setState({ currentNote: '' })
+          }}
+        />
+        <ListSection data={this.state.notes} />
       </View>
     )
   }
@@ -58,7 +74,7 @@ const Styles = StyleSheet.create({
     flex: 1,
     margin: 4,
     backgroundColor: 'rgba(255,0,0,0.2)',
-    padding:8
+    padding: 8
   },
   publishOption: {
     margin: 4,
@@ -71,8 +87,8 @@ const Styles = StyleSheet.create({
   },
   note: {
     backgroundColor: 'rgba(255,0,0,0.2)',
-    marginTop:4,
+    marginTop: 4,
     marginHorizontal: 4,
-    padding:8
+    padding: 8
   }
 })
