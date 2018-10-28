@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, StyleSheet, View, FlatList, TextInput, Button } from 'react-native'
+import { Text, StyleSheet, View, FlatList, TextInput, Button, ToastAndroid } from 'react-native'
 
 //Declaración de componente InputSection
 const InputSection = ({ children, currentNote, editCurrentNote, addNote }) => <View style={Styles.inputSection}>
@@ -13,6 +13,7 @@ const InputSection = ({ children, currentNote, editCurrentNote, addNote }) => <V
     <Button
       title='Agregar'
       onPress={addNote}
+      disabled={currentNote.trim()===''}
     />
   </View>
   {children}
@@ -51,6 +52,7 @@ export default class Notes extends Component {
           addNote={() => {
             this.setState({ notes: this.state.notes.concat({ key: this.state.currentNote }) })
             this.setState({ currentNote: '' })
+            ToastAndroid.show('Nota agregada', ToastAndroid.SHORT)
           }}
         />
         <ListSection data={this.state.notes} />
@@ -66,29 +68,33 @@ const Styles = StyleSheet.create({
   },
   inputSection: {
     height: 80,
-    backgroundColor: 'rgba(0,0,255,0.2)',
+    //backgroundColor: 'rgba(0,0,255,0.2)',
     flexDirection: 'row',
     marginBottom: 8
   },
   textInput: {
     flex: 1,
     margin: 4,
-    backgroundColor: 'rgba(255,0,0,0.2)',
-    padding: 8
+    padding: 8,
+    borderRadius: 4,
+    elevation: 2
   },
   publishOption: {
     margin: 4,
     justifyContent: 'center',
-    backgroundColor: 'rgba(255,0,0,0.2)'
+    //backgroundColor: 'rgba(255,0,0,0.2)'
   },
   listSection: {
     flex: 1,
-    backgroundColor: 'rgba(0,255,0,0.2)'
+    //backgroundColor: 'rgba(0,255,0,0.2)'
   },
   note: {
-    backgroundColor: 'rgba(255,0,0,0.2)',
-    marginTop: 4,
-    marginHorizontal: 4,
-    padding: 8
+    backgroundColor: 'rgba(255,140,0,0.2)',
+    marginTop: 6,
+    marginBottom: 2,
+    marginHorizontal: 6,
+    padding: 8,
+    borderRadius: 4,
+    elevation: 2
   }
 })
